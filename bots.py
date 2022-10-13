@@ -14,7 +14,7 @@ class Bot1:
 
     # URLs
     urlDefault = "http://info.aec.edu.in/aec/default.aspx"
-    urlAttnd = "http://info.aec.edu.in/AEC/ajax/StudentAttendance,App_Web_qetisnxs.ashx"
+    urlAttnd = "http://info.aec.edu.in/AEC/ajax/StudentAttendance,App_Web_z03ar5c-.ashx"
     
     # Payloads
     loginPayload = "__VIEWSTATE={viewstate}&__VIEWSTATEGENERATOR={viewstategenerator}&__EVENTVALIDATION={eventvalidation}&txtId1=&txtPwd1=&txtId2={uid}&txtPwd2={pwd}&imgBtn2.x=41&imgBtn2.y=18&txtId3=&txtPwd3="
