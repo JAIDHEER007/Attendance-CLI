@@ -15,7 +15,7 @@ if __name__ == '__main__':
         metavar = 'User ID', 
         nargs = '?',
         type = str,
-        default = '19a91a0553', 
+        default = 'Add default user id', 
         required = False,
         help = 'User ID',
     )
@@ -23,7 +23,7 @@ if __name__ == '__main__':
         '--password', '--pwd', '-p', 
         metavar = 'password', 
         nargs = '?',
-        default = 'jaidheer@007', 
+        default = 'add default password', 
         required = False,
         help = 'Password',
     )
