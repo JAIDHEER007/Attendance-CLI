@@ -13,8 +13,15 @@ class Bot1:
     }
 
     # URLs
+
+    # Defualt ASPX URl
     urlDefault = "http://info.aec.edu.in/aec/default.aspx"
-    urlAttnd = "http://info.aec.edu.in/AEC/ajax/StudentAttendance,App_Web_z03ar5c-.ashx"
+    
+    # URL to Get the Student Attendance URL
+    urlSA = "https://info.aec.edu.in/aec/Academics/StudentAttendance.aspx?scrid=3&showtype=SA"
+    
+    # Changing Student Attendance URL
+    urlAttnd = None
     
     # Payloads
     loginPayload = "__VIEWSTATE={viewstate}&__VIEWSTATEGENERATOR={viewstategenerator}&__EVENTVALIDATION={eventvalidation}&txtId1=&txtPwd1=&txtId2={uid}&txtPwd2={pwd}&imgBtn2.x=41&imgBtn2.y=18&txtId3=&txtPwd3="
@@ -23,7 +30,7 @@ class Bot1:
     # Query Params
     querystring = {"_method":"ShowAttendance","_session":"r"}
 
-    def __init__(self, userData):
+    def __init__(self, userData: dict):
         self.__userData = userData
         self.cookieJar = {}
         self.formData = {}
@@ -89,6 +96,34 @@ class Bot1:
             raise Exception("Failed to get Form Authentication Cookie. Check User ID and Password") from None
         
         self.cookieJar.update(frmAuthCookie)
+
+    def getAttendanceURL(self) -> None:
+        if Bot1.urlAttnd is not None: 
+            return
+
+        querystring = {"scrid":"3", "showtype":"SA"}
+
+        headers = copy.deepcopy(Bot1.__headers)
+        headers['cookie'] = "ASP.NET_SessionId={aspCookie}; frmAuth={frmAuthCookie}".format(
+            aspCookie = self.cookieJar['ASP.NET_SessionId'], 
+            frmAuthCookie = self.cookieJar['frmAuth']
+        )
+
+        response = requests.request("GET", Bot1.urlSA, headers = headers, params = querystring)
+        
+        if response.status_code != 200:
+            raise Exception("Failed to get the Attendance URL from Student Master. Request Failed") from None
+
+        soup = BS(response.text, 'html.parser')
+
+        for sTags in soup.find_all('script'):
+            srcAttr = sTags.get('src')
+            if srcAttr is not None and srcAttr.startswith('/AEC/ajax/StudentAttendance'):
+                Bot1.urlAttnd = 'https://info.aec.edu.in/' + srcAttr
+                break
+        else:
+            raise Exception("Failed to get the Attendance URL from Student Master") from None
+
 
     def getAttendanceRD(self, fDate = "", tDate = "") -> str:
         
