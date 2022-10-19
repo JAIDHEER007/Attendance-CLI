@@ -52,7 +52,8 @@ if __name__ == '__main__':
         bot1.checkInternet()
         bot1.getVitalData()
         bot1.makeLogin()
-
+        bot1.getAttendanceURL()
+        
         if args.today:
             today = date.today().strftime(r"%d-%m-%Y")
             student1 = Student(rawData = bot1.getAttendanceRD(fDate = today, tDate = today))            
